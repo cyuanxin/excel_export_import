@@ -9,8 +9,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -19,14 +17,17 @@ import java.util.Map;
  * Created by zhangyuanxin on 2016/3/23.
  */
 public class Test {
-    private final static String xmlName = "uploadCommonProduct.xml";
     public static void main(String[] args) throws FileImportException, FileNotFoundException {
+        testImport();
+    }
+
+    public static void testImport() throws FileImportException, FileNotFoundException {
         ConfigParser configParser = ConfigurationParserFactory.getConfigParser(Configuration.ParserType.XML);
-        Path configFile = Paths.get("/import/config.xml");
-        File importFile = new File("/import/test.xlsx");
+        //put resource/impot/config.xml and testImport.xlsx in d：/
+        File importFile = new File("d:/testImport.xlsx");
         Configuration configuration = null;
         try {
-            configuration = configParser.getConfig(new FileInputStream("/import/config.xml"));
+            configuration = configParser.getConfig(new FileInputStream("d:/config.xml"));
             MapResult mapResult = (MapResult) FileImportExecutor.importFile(configuration, importFile, importFile.getName());
             List<Map> maps = mapResult.getResult();
             for (Map<String, Object> map : maps) {
@@ -36,7 +37,7 @@ public class Test {
                 Date date = (Date) map.get("date");
                 BigDecimal bigDecimal = (BigDecimal) map.get("bigdecimal");
                 System.out.println("index :" + index + " f1 : " + f1 + " string : " + string
-                + " date : " + date.toString() + " bigdecimal " + bigDecimal);
+                        + " date : " + date.toString() + " bigdecimal " + bigDecimal);
             }
         } catch (FileImportException e) {
             System.out.println(e);;
