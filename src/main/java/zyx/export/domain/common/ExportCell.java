@@ -9,7 +9,7 @@ import zyx.domain.BaseModel;
 public class ExportCell extends BaseModel {
     private String name;
     private String title;//导出的标题中文
-    private String alias;//对应的别名，mybatis映射的字段名
+    private String alias;//对应的别名，映射的字段名
 
     public String getName() {
         return name;

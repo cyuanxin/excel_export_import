@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exportFile>
+	<fileName>exportConfig</fileName>
+	<!--exportType 0:EXCEL2007,1:csv);
+	 titile 导出展示的列title名
+	   alias对应的别名，映射的字段名-->
+	<exportType>2</exportType>
+	<cell>
+		<title>int</title>
+		<alias>index</alias>
+	</cell>
+	<cell>
+		<title>today</title>
+		<alias>date</alias>
+	</cell>
+	<cell>
+		<title>greet</title>
+		<alias>greet</alias>
+	</cell>
+	<cell>
+		<title>float</title>
+		<alias>float</alias>
+	</cell>
+	<cell>
+		<title>bigdecimal</title>
+		<alias>bigdecimal</alias>
+	</cell>
+
+</exportFile>
+
