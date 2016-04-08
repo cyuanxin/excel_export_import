@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by stark.zhang on 2015/11/6.
  */
-public class ExportFile extends BaseModel {
+public class ExportConfig extends BaseModel {
     private String fileName;//输出的文件名
     private ExportType exportType;//0 表示 excel, 1 表示txt
     private List<ExportCell> exportCells;
