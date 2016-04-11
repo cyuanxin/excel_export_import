@@ -20,8 +20,8 @@
 * 导出时，把list or map 转化成 对应的excel或者csv 
 * 读取excel，转换成相应的map或者其他内容(其他内容暂时还未开发)。目前只有map。
 
-#### 使用
+### 使用
 
-**** Example
+#### Example
 
 * test->main方法，先把resource下的相关配置文件和用来测试的excel放置到D盘。执行import和export方法。就运行成功了
