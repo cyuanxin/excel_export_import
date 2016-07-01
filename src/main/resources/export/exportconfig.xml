@@ -4,7 +4,7 @@
 	<!--exportType 0:EXCEL2007,1:csv);
 	 titile 导出展示的列title名
 	   alias对应的别名，映射的字段名-->
-	<exportType>2</exportType>
+	<exportType>0</exportType>
 	<cell>
 		<title>int</title>
 		<alias>index</alias>

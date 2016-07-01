@@ -1,12 +1,13 @@
 # excel_export_import
 ## 简介
 ### 为什么开发
-* 做系统的时候，经常需要对文件导出以及excel的导入。我们最熟悉的是便是poi。但是poi本身只是提供了对excel的处理，并没有一些组件可以对其进一步的封装
+* 做系统的时候，经常需要对文件导出以及excel的导入。我们最熟悉的是便是poi。但是poi本身只是提供了对excel的处理，没有具体到每个字段
 
-####　excel导出
+### 存在的问题
+#### excel导出
 
-* 比如字段A，B,就需要写个代码处理AB，下次业务说换成C，又要修改大量代码
-* 哪天pm说不要导出excel，导成csv。
+* 比如字段A，B,就需要写个代码处理AB，下次业务说换成C，需要修改大量代码
+* 如果不要导出excel，导成csv。
 
 ####  excel导入
 
@@ -25,3 +26,22 @@
 #### Example
 
 * test->main方法，先把resource下的相关配置文件和用来测试的excel放置到D盘。执行import和export方法。就运行成功了
+
+#### xml配置
+
+##### excel导出(resources/export/exportconfig.xml)
+
+*<fileName>exportConfig</fileName> 导出文件名称
+*<exportType>0</exportType> 导出类型(0:excel,1:csv)
+*<title>int</title> 输出第一行的title
+*<alias>index</alias> 输出对应的list的property或者map的key
+
+#### excel导入(resources/export/config.xml)
+
+*<startRowNo>n</startRowNo>从n行开始算起，从0开始
+*<number>m</number>第m列
+*<cellType>0</cellType>转换的数据类型(0,"int"),(1,"float"),(2,"string"),(3,"date"),(4,"bigDecimal"),(5,"double")
+*<nullble>0</nullble>是否可为空 0可为空 1 不允许
+
+*返回结果MapResult<Map>: List<Map>内容，resMsg解析结果(如果空，表示数据行通过，有不合法内容则返回相应的错误信息)
+*map map.get(LINE_NUM_KEY)可得到所在的行数, map.get(isLineLegal)可得到该行是否合法

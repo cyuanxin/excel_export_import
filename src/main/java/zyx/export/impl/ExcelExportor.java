@@ -1,12 +1,12 @@
 package zyx.export.impl;
 
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import zyx.export.domain.common.ExportCell;
 import zyx.export.exception.FileExportException;
 import zyx.export.service.IFileExportor;
-import zyx.util.DateUtil;
-import zyx.util.ReflectionUtils;
+import zyx.util.*;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -19,10 +19,10 @@ import java.util.Map;
  */
 public class ExcelExportor implements IFileExportor {
     @Override
-    public HSSFWorkbook getExportResult(List<?> data, List<ExportCell> exportCells) throws FileExportException {
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        HSSFSheet sheet = workbook.createSheet();
-        HSSFRow titleRow = sheet.createRow(0);
+    public Workbook getExportResult(List<?> data, List<ExportCell> exportCells) throws FileExportException {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet();
+        Row titleRow = sheet.createRow(0);
         createTitleRow(workbook, titleRow, exportCells, sheet);
         if (List.class.isAssignableFrom(data.getClass())) {
             if (!data.isEmpty()) {
@@ -39,15 +39,15 @@ public class ExcelExportor implements IFileExportor {
     }
 
 
-    private HSSFWorkbook createContentRowsByMap(HSSFWorkbook workbook, List<Map> dataList, List<ExportCell> exportCells, HSSFSheet sheet) throws FileExportException {
+    private Workbook createContentRowsByMap(Workbook workbook, List<Map> dataList, List<ExportCell> exportCells, Sheet sheet) throws FileExportException {
         if (!dataList.isEmpty()) {
             int rowNum = 1;
+            CellStyle cellStyle = createCellStyle(workbook);
             for (Map map : dataList) {
-                HSSFRow row = sheet.createRow(rowNum);
+                Row row = sheet.createRow(rowNum);
                 row.setHeightInPoints(23.0F);
-                HSSFCellStyle cellStyle = createCellStyle(workbook);
                 for (int colNum = 0; colNum < exportCells.size(); colNum++) {
-                    HSSFCell cell = row.createCell(colNum);
+                    Cell cell = row.createCell(colNum);
                     cell.setCellStyle(cellStyle);
                     ExportCell exportCell = exportCells.get(colNum);
                     Object obj = null;
@@ -61,22 +61,22 @@ public class ExcelExportor implements IFileExportor {
     }
 
 
-    private static void createContentRowsByBean(HSSFWorkbook workbook, List<Object> dataList, List<ExportCell> exportCells, HSSFSheet sheet) throws FileExportException {
+    private static void createContentRowsByBean(Workbook workbook, List<Object> dataList, List<ExportCell> exportCells, Sheet sheet) throws FileExportException {
         int rowNum = 1;
         if (!dataList.isEmpty()) {
+            CellStyle cellStyle = createCellStyle(workbook);
             for (Object t : dataList) {
-                HSSFRow row = sheet.createRow(rowNum);
+                Row row = sheet.createRow(rowNum);
                 row.setHeightInPoints(23.0F);
-                HSSFCellStyle cellStyle = createCellStyle(workbook);
                 for (int colNum = 0; colNum < exportCells.size(); colNum++) {
-                    HSSFCell cell = row.createCell(colNum);
+                    Cell cell = row.createCell(colNum);
                     cell.setCellStyle(cellStyle);
                     ExportCell exportCell = exportCells.get(colNum);
                     Object obj = null;
                     try {
                         obj = ReflectionUtils.executeMethod(t, ReflectionUtils.returnGetMethodName(exportCell.getAlias()));
                     } catch (Exception e) {
-                        throw new FileExportException("执行executeMethod  出错 Alias is " + exportCell.getAlias() + " at " + e);
+                        throw new FileExportException("执行executeMethod  出错 Alias is " + exportCell.getAlias() + " at " + e.getMessage());
                     }
                     setCellValue(obj, cell);
                 }
@@ -102,7 +102,7 @@ public class ExcelExportor implements IFileExportor {
                 bigDecimal = new BigDecimal(((Float) obj).floatValue());
                 cell.setCellValue(bigDecimal.doubleValue());
             } else if ((classType.equals("java.util.Date")) || (classType.endsWith("Date")))
-                cell.setCellValue(DateUtil.dateToString((Date) obj, DateUtil.YYYYMMDDHHMMSS));
+                cell.setCellValue(zyx.util.DateUtil.dateToString((Date) obj, zyx.util.DateUtil.YYYYMMDDHHMMSS));
             else if (classType.equals("java.util.Calendar"))
                 cell.setCellValue((Calendar) obj);
             else if (("char".equals(classType)) || (classType.equals("java.lang.Character")))
@@ -121,10 +121,10 @@ public class ExcelExportor implements IFileExportor {
         }
     }
 
-    private static void createTitleRow(HSSFWorkbook workbook, HSSFRow row, List<ExportCell> exportCells, HSSFSheet sheet) {
-        HSSFCellStyle style = createHeadStyle(workbook);
+    private static void createTitleRow(Workbook workbook, Row row, List<ExportCell> exportCells, Sheet sheet) {
+        CellStyle style = createHeadStyle(workbook);
         row.setHeightInPoints(25.0F);
-        HSSFFont font = workbook.createFont();
+        Font font = workbook.createFont();
         font.setColor((short) 12);
         font.setBoldweight((short) 700);
         style.setFont(font);
@@ -133,15 +133,15 @@ public class ExcelExportor implements IFileExportor {
         int i = 0;
         for (ExportCell exportCell : exportCells) {
             sheet.setColumnWidth(i, 3200);
-            HSSFCell cell = row.createCell(i);
+            Cell cell = row.createCell(i);
             cell.setCellValue(exportCell.getTitle());
             cell.setCellStyle(style);
             ++i;
         }
     }
 
-    private static HSSFCellStyle createHeadStyle(HSSFWorkbook workbook) {
-        HSSFCellStyle style = workbook.createCellStyle();
+    private static CellStyle createHeadStyle(Workbook workbook) {
+        CellStyle style = workbook.createCellStyle();
         style.setAlignment((short) 2);
         style.setVerticalAlignment((short) 1);
         style.setFillForegroundColor((short) 55);
@@ -154,12 +154,12 @@ public class ExcelExportor implements IFileExportor {
         return style;
     }
 
-    private static HSSFCellStyle createCellStyle(HSSFWorkbook workbook) {
-        HSSFCellStyle style = workbook.createCellStyle();
+    private static CellStyle createCellStyle(Workbook workbook) {
+        CellStyle style = workbook.createCellStyle();
         style.setAlignment((short) 2);
         style.setVerticalAlignment((short) 1);
         style.setFillForegroundColor((short) 9);
-        HSSFFont font = workbook.createFont();
+        Font font = workbook.createFont();
         font.setColor((short) 8);
         font.setFontHeightInPoints((short) 12);
         style.setWrapText(true);
