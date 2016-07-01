@@ -31,17 +31,17 @@
 
 ##### excel导出(resources/export/exportconfig.xml)
 
-*<fileName>exportConfig</fileName> 导出文件名称
-*<exportType>0</exportType> 导出类型(0:excel,1:csv)
-*<title>int</title> 输出第一行的title
-*<alias>index</alias> 输出对应的list的property或者map的key
+* <fileName>exportConfig</fileName> 导出文件名称
+* <exportType>0</exportType> 导出类型(0:excel,1:csv)
+* <title>int</title> 输出第一行的title
+* <alias>index</alias> 输出对应的list的property或者map的key
 
-#### excel导入(resources/export/config.xml)
+##### excel导入(resources/export/config.xml)
 
-*<startRowNo>n</startRowNo>从n行开始算起，从0开始
-*<number>m</number>第m列
-*<cellType>0</cellType>转换的数据类型(0,"int"),(1,"float"),(2,"string"),(3,"date"),(4,"bigDecimal"),(5,"double")
-*<nullble>0</nullble>是否可为空 0可为空 1 不允许
+* <startRowNo>n</startRowNo>从n行开始算起，从0开始
+* <number>m</number>第m列
+* <cellType>0</cellType>转换的数据类型(0,"int"),(1,"float"),(2,"string"),(3,"date"),(4,"bigDecimal"),(5,"double")
+* <nullble>0</nullble>是否可为空 0可为空 1 不允许
 
-*返回结果MapResult<Map>: List<Map>内容，resMsg解析结果(如果空，表示数据行通过，有不合法内容则返回相应的错误信息)
-*map map.get(LINE_NUM_KEY)可得到所在的行数, map.get(isLineLegal)可得到该行是否合法
+* 返回结果MapResult<Map>: List<Map>内容，resMsg解析结果(如果空，表示数据行通过，有不合法内容则返回相应的错误信息)
+* map map.get(LINE_NUM_KEY)可得到所在的行数, map.get(isLineLegal)可得到该行是否合法
