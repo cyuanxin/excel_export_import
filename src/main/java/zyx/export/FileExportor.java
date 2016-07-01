@@ -1,6 +1,6 @@
 package zyx.export;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Workbook;
 import zyx.export.domain.common.ExportConfig;
 import zyx.export.domain.common.ExportResult;
 import zyx.export.domain.common.ExportType;
@@ -30,7 +30,7 @@ public class FileExportor {
         ExportType exportType = exportConfig.getExportType();
         switch (exportType) {
             case EXCEL2007:
-                HSSFWorkbook workbook = new ExcelExportor().getExportResult(data, exportConfig.getExportCells());
+                Workbook workbook = new ExcelExportor().getExportResult(data, exportConfig.getExportCells());
                 ExportExcelResult exportExcelResult = new ExportExcelResult();
                 exportExcelResult.setWorkbook(workbook);
                 exportExcelResult.setFileName(exportConfig.getFileName());
