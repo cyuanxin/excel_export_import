@@ -25,7 +25,7 @@
 
 #### Example
 
-* test->main方法，先把resource下的相关配置文件和用来测试的excel放置到D盘。执行import和export方法。就运行成功了
+* test->main方法，执行import和export方法
 
 #### xml配置
 
