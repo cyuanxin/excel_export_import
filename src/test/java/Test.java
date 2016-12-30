@@ -25,7 +25,7 @@ public class Test {
         testImport();
 //        URL u = Test.class.getResource("import/config.xml");
 //        System.out.println(u.toString());
-//        testExport();
+        testExport();
     }
 
 

@@ -31,17 +31,18 @@
 
 ##### excel导出(resources/export/exportconfig.xml)
 
-* <fileName>exportConfig</fileName> 导出文件名称
-* <exportType>0</exportType> 导出类型(0:excel,1:csv)
-* <title>int</title> 输出第一行的title
-* <alias>index</alias> 输出对应的list的property或者map的key
+* exportConfig: 导出文件名称
+* exportType: 导出类型(0:excel,1:csv)
+* title: 输出title
+* alias: 输出对应的list的property或者map的key
 
 ##### excel导入(resources/export/config.xml)
 
-* <startRowNo>n</startRowNo>从n行开始算起，从0开始
-* <number>m</number>第m列
-* <cellType>数字或者java类型名称</cellType>转换的数据类型(0 或 Int),(1 或 Float),(2 或 String),(3 或 Date),(4 或 BigDecimal),(5 或 Double)
-* <nullble>0</nullble>是否可为空 0可为空 1 不允许
+* startRowNo: 从n行开始算起，从0开始
+* number: 第m列
+* key: 解析存储的map对应的key
+* cellType: 数字或者java类型名称     转换的数据类型(0 或 Int),(1 或 Float),(2 或 String),(3 或 Date),(4 或 BigDecimal),(5 或 Double)
+* nullble: 是否可为空 0可为空 1 不允许
 
 * 返回结果MapResult<Map>: List<Map>内容，resMsg解析结果(如果空，表示数据行通过，有不合法内容则返回相应的错误信息)
 * map map.get(LINE_NUM_KEY)可得到所在的行数, map.get(isLineLegal)可得到该行是否合法
