@@ -4,31 +4,31 @@
 	<cell>
 		<number>0</number>
 		<key>index</key>
-		<cellType>0</cellType>
+		<cellType>Int</cellType>
 		<nullble>0</nullble>
 	</cell>
 	<cell>
 		<number>1</number>
 		<key>float</key>
-		<cellType>1</cellType>
+		<cellType>Float</cellType>
 		<nullble>1</nullble>
 	</cell>
 	<cell>
 		<number>2</number>
 		<key>string</key>
-		<cellType>2</cellType>
+		<cellType>String</cellType>
 		<nullble>1</nullble>
 	</cell>
 	<cell>
 		<number>3</number>
 		<key>date</key>
-		<cellType>3</cellType>
+		<cellType>Date</cellType>
 		<nullble>1</nullble>
 	</cell>
 	<cell>
 		<number>4</number>
 		<key>bigdecimal</key>
-		<cellType>4</cellType>
+		<cellType>BigDecimal</cellType>
 		<nullble>1</nullble>
 	</cell>
 	
