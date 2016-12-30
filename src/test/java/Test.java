@@ -12,24 +12,31 @@ import zyx.importfile.exception.FileImportException;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 /**
  * Created by zhangyuanxin on 2016/3/23.
  */
 public class Test {
-    public static void main(String[] args) throws FileImportException, FileNotFoundException, FileExportException {
- //       testImport();
-        testExport();
+    public static void main(String[] args) throws FileImportException, FileNotFoundException, FileExportException, URISyntaxException {
+
+        testImport();
+//        URL u = Test.class.getResource("import/config.xml");
+//        System.out.println(u.toString());
+//        testExport();
     }
 
-    public static void testImport() throws FileImportException, FileNotFoundException {
+
+    public static void testImport() throws FileImportException, FileNotFoundException, URISyntaxException {
+
         ConfigParser configParser = ConfigurationParserFactory.getConfigParser(Configuration.ParserType.XML);
-        //put resource/impot/config.xml and testImport.xlsx in d：/
-        File importFile = new File("d:/testImport.xlsx");
+        URI uri = Test.class.getResource("import/testImport.xlsx").toURI();
+        File importFile = new File(uri);
         Configuration configuration = null;
         try {
-            configuration = configParser.getConfig(new FileInputStream("d:/config.xml"));
+            configuration = configParser.getConfig(Test.class.getResourceAsStream("import/config.xml"));
             MapResult mapResult = (MapResult) FileImportExecutor.importFile(configuration, importFile, importFile.getName());
             List<Map> maps = mapResult.getResult();
             for (Map<String, Object> map : maps) {
@@ -47,8 +54,7 @@ public class Test {
     }
 
     public static void testExport() throws FileNotFoundException, FileExportException {
-        //put resource/export/config.xml  in    d:/
-        ExportConfig exportConfig = ExportConfigFactory.getExportConfig(new FileInputStream("d:/exportconfig.xml"));
+        ExportConfig exportConfig = ExportConfigFactory.getExportConfig(Test.class.getResourceAsStream("export/exportconfig.xml"));
         //map也可以换成一个实体类
         List<Map> lists = new LinkedList<>();
         for (int i = 0; i < 10; i++) {

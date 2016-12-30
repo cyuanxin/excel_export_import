@@ -40,10 +40,7 @@ public class XmlConfigParser implements ConfigParser {
 
             Element cellType = element.element("cellType");
             String cellTypeText = cellType.getText().trim();
-            if (StringUtils.isEmpty(cellTypeText) || !StringUtils.isNumeric(cellTypeText)) {
-                throw new FileImportException("用于导入的xml文档 <cellType> 为空 或者非数字");
-            }
-            importCell.setCellType(ImportCell.CellType.getCellType(Integer.valueOf(cellTypeText)));
+            importCell.setCellType(getCellType(cellTypeText));
 
             Element nullble = element.element("nullble");
             String nullbleText = nullble.getText().trim();
@@ -61,6 +58,20 @@ public class XmlConfigParser implements ConfigParser {
 
         return importCells;
     }
+
+    private static ImportCell.CellType getCellType(String typeStr) throws FileImportException {
+        if (StringUtils.isEmpty(typeStr)) {
+            throw new FileImportException("import config xml cellType is empty");
+        }
+        if (StringUtils.isNumeric(typeStr)) {
+            return ImportCell.CellType.getCellType(Integer.valueOf(typeStr));
+        } else {
+            return ImportCell.CellType.getCellType(typeStr);
+
+        }
+
+    }
+
     public final static String XML_BASE_PATH = "/properties/framework/import_file/";
 //    /**
 //     * 该方法是兼容交易系统
@@ -76,14 +87,16 @@ public class XmlConfigParser implements ConfigParser {
 //            throw new FileImportException(e, "FileImportorFactoryBuilder 生成 inputstream 出错" + e);
 //        }
 //    }
+
     /**
      * 获得configuration
+     *
      * @param configStream
      * @return
      * @throws FileImportException
      */
     @Override
-    public  Configuration getConfig(InputStream configStream) throws FileImportException {
+    public Configuration getConfig(InputStream configStream) throws FileImportException {
 
         Configuration configuration = new Configuration();
         SAXReader reader = new SAXReader();
