@@ -1,15 +1,19 @@
 package zyx.importfile.impl;
 
 import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 import zyx.importfile.ConfigParser;
 import zyx.importfile.domain.common.Configuration;
 import zyx.importfile.domain.common.ImportCell;
 import zyx.importfile.exception.FileImportException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,33 +21,31 @@ import java.util.List;
 /**
  * Created by stark.zhang on 2015/11/21.
  */
-public class XmlConfigParser implements ConfigParser {
+public class XmlConfigParser extends ConfigParser {
 
-    private static List<ImportCell> initElement(List<Element> elements) throws FileImportException {
+    private static List<ImportCell> initElement(NodeList elements) throws FileImportException {
 
-        List<ImportCell> importCells = new ArrayList<ImportCell>(elements.size());
-        for (Element element : elements) {
+        List<ImportCell> importCells = new ArrayList<ImportCell>(elements.getLength());
+        for (int i = 0; i < elements.getLength(); i++) {
             ImportCell importCell = new ImportCell();
-            Element number = element.element("number");
-            String numberText = number.getText().trim();
+            Element node = (Element) elements.item(i);
+            String numberText = getNodeText(node, "number");
             if (StringUtils.isEmpty(numberText) || !StringUtils.isNumeric(numberText)) {
                 throw new FileImportException("用于导入的xml文档 <number> 为空 或者非数字");
             }
             importCell.setNumber(Integer.valueOf(numberText));
 
-            Element key = element.element("key");
-            String keyText = key.getText().trim();
+
+            String keyText = getNodeText(node, "key");
             if (StringUtils.isEmpty(keyText)) {
                 throw new FileImportException("用于导入的xml文档 <key> 为空");
             }
             importCell.setKey(keyText);
 
-            Element cellType = element.element("cellType");
-            String cellTypeText = cellType.getText().trim();
+            String cellTypeText = getNodeText(node, "cellType");
             importCell.setCellType(getCellType(cellTypeText));
 
-            Element nullble = element.element("nullble");
-            String nullbleText = nullble.getText().trim();
+            String nullbleText = getNodeText(node, "nullble");
             if (StringUtils.isEmpty(nullbleText) || !StringUtils.isNumeric(nullbleText)) {
                 throw new FileImportException("用于导入的xml文档 <nullble> 为空 或者非数字");
             }
@@ -72,6 +74,8 @@ public class XmlConfigParser implements ConfigParser {
 
     }
 
+
+
     public final static String XML_BASE_PATH = "/properties/framework/import_file/";
 //    /**
 //     * 该方法是兼容交易系统
@@ -97,22 +101,25 @@ public class XmlConfigParser implements ConfigParser {
      */
     @Override
     public Configuration getConfig(InputStream configStream) throws FileImportException {
-
-        Configuration configuration = new Configuration();
-        SAXReader reader = new SAXReader();
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = null;
         Document document = null;
         try {
-            document = reader.read(configStream);
-        } catch (DocumentException e) {
-            throw new FileImportException(e, "读取xml文档出错 msg is " + e);
+            dBuilder = dbFactory.newDocumentBuilder();
+            document = dBuilder.parse(configStream);
+
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            throw new FileImportException(e, "pares xml error");
         }
+//        Puts all Text nodes in the full depth of the sub-tree underneath this Node
+        document.getDocumentElement().normalize();
+        Configuration configuration = new Configuration();
 
-        Element root = document.getRootElement();
-        List<Element> elements = root.elements("cell");
-        List<ImportCell> importCells = initElement(elements);
+        Element root = document.getDocumentElement();
+        NodeList nList = document.getElementsByTagName("cell");
+        List<ImportCell> importCells = initElement(nList);
 
-        Element startRowNo = root.element("startRowNo");
-        String startRowNoText = startRowNo.getText().trim();
+        String startRowNoText = getNodeText(root, "startRowNo");
         if (StringUtils.isEmpty(startRowNoText) || !StringUtils.isNumeric(startRowNoText)) {
             throw new FileImportException("用于导入的xml文档 <number> 为空 或者非数字");
         }

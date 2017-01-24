@@ -1,15 +1,21 @@
 package zyx.export;
 
 import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 import zyx.export.domain.common.ExportCell;
 import zyx.export.domain.common.ExportConfig;
 import zyx.export.domain.common.ExportType;
 import zyx.export.exception.FileExportException;
+import zyx.importfile.ConfigParser;
+import zyx.importfile.exception.FileImportException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,24 +31,34 @@ public class ExportConfigFactory {
     private static ExportConfig getExportCells(InputStream inputStream) throws FileExportException {
 
         ExportConfig exportConfig = new ExportConfig();
-        SAXReader reader = new SAXReader();
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = null;
         Document document = null;
         try {
-            document = reader.read(inputStream);
-        } catch (DocumentException e) {
-            throw new FileExportException("读取xml文档出错 msg is " + e);
+            dBuilder = dbFactory.newDocumentBuilder();
+            document = dBuilder.parse(inputStream);
+
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            throw new FileExportException(e, "pares xml error");
         }
 
-        Element root = document.getRootElement();
-        List<Element> elements = root.elements("cell");
+
+        Element root = document.getDocumentElement();
+        NodeList elements = root.getElementsByTagName("cell");
         List<ExportCell> exportCells = initElement(elements);
 
-        String fileName = root.element("fileName").getTextTrim();
+        String fileName = "";
+        String exportType1 = "";
+        try {
+            fileName = ConfigParser.getNodeText(root, "fileName");
+            exportType1 = ConfigParser.getNodeText(root, "exportType");
+        } catch (FileImportException e) {
+            throw new FileExportException(e);
+        }
         if (StringUtils.isEmpty(fileName)) {
             throw new FileExportException("用于导出的xml文档 <fileName> 为空");
         }
 
-        String exportType1 = root.element("exportType").getTextTrim();
         if (StringUtils.isEmpty(exportType1) || !StringUtils.isNumeric(exportType1)) {
             throw new FileExportException("用于导出的xml文档 <exportType> 为空");
         }
@@ -58,20 +74,25 @@ public class ExportConfigFactory {
         return exportConfig;
     }
 
-    private static List<ExportCell> initElement(List<Element> elements) throws FileExportException {
+    private static List<ExportCell> initElement(NodeList elements) throws FileExportException {
 
-        List<ExportCell> exportCells = new ArrayList<ExportCell>(elements.size());
-        for (Element element : elements) {
+        List<ExportCell> exportCells = new ArrayList<ExportCell>(elements.getLength());
+        for (int i = 0; i < elements.getLength(); i++) {
             ExportCell exportCell = new ExportCell();
-            Element title = element.element("title");
-            String titleText = title.getText().trim();
+            Element node = (Element) elements.item(i);
+            String titleText = "";
+            String aliasText = "";
+            try {
+                titleText = ConfigParser.getNodeText(node, "title");
+                aliasText = ConfigParser.getNodeText(node, "alias");
+            } catch (FileImportException e) {
+                throw new FileExportException(e);
+            }
             if (StringUtils.isEmpty(titleText)) {
                 throw new FileExportException("用于导出的xml文档 <title> 为空");
             }
             exportCell.setTitle(titleText);
 
-            Element alias = element.element("alias");
-            String aliasText = alias.getText().trim();
             if (StringUtils.isEmpty(aliasText)) {
                 throw new FileExportException("用于导出的xml文档 <alias> 为空");
             }
