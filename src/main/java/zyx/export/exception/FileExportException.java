@@ -9,4 +9,11 @@ public class FileExportException extends Exception {
         super(message);
     }
 
+    public FileExportException(Throwable throwable, String message){
+        super(message, throwable);
+    }
+
+    public FileExportException(Throwable throwable){
+        super(throwable);
+    }
 }
