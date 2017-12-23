@@ -125,7 +125,7 @@ public class ExcelExportor implements IFileExportor {
         row.setHeightInPoints(25.0F);
         Font font = workbook.createFont();
         font.setColor((short) 12);
-        font.setBoldweight((short) 700);
+//        font.setBoldweight((short) 700);
         style.setFont(font);
         style.setFillBackgroundColor((short) 13);
 
@@ -139,29 +139,39 @@ public class ExcelExportor implements IFileExportor {
         }
     }
 
+    /**
+     * 创建title的样式 默认就行
+     * @param workbook
+     * @return
+     */
     private static CellStyle createHeadStyle(Workbook workbook) {
         CellStyle style = workbook.createCellStyle();
-        style.setAlignment((short) 2);
-        style.setVerticalAlignment((short) 1);
-        style.setFillForegroundColor((short) 55);
-        style.setFillPattern((short) 1);
-        style.setBorderBottom((short) 1);
-        style.setBorderLeft((short) 1);
-        style.setBorderRight((short) 1);
-        style.setBorderTop((short) 1);
-        style.setWrapText(true);
+//        style.setAlignment((short) 2);
+//        style.setVerticalAlignment((short) 1);
+//        style.setFillForegroundColor((short) 55);
+//        style.setFillPattern((short) 1);
+//        style.setBorderBottom((short) 1);
+//        style.setBorderLeft((short) 1);
+//        style.setBorderRight((short) 1);
+//        style.setBorderTop((short) 1);
+//        style.setWrapText(true);
         return style;
     }
 
+    /**
+     * 创建正文的样式
+     * @param workbook
+     * @return
+     */
     private static CellStyle createCellStyle(Workbook workbook) {
         CellStyle style = workbook.createCellStyle();
-        style.setAlignment((short) 2);
-        style.setVerticalAlignment((short) 1);
-        style.setFillForegroundColor((short) 9);
-        Font font = workbook.createFont();
-        font.setColor((short) 8);
-        font.setFontHeightInPoints((short) 12);
-        style.setWrapText(true);
+//        style.setAlignment((short) 2);
+//        style.setVerticalAlignment((short) 1);
+//        style.setFillForegroundColor((short) 9);
+//        Font font = workbook.createFont();
+//        font.setColor((short) 8);
+//        font.setFontHeightInPoints((short) 12);
+//        style.setWrapText(true);
         return style;
     }
 }
