@@ -46,8 +46,8 @@ public class Test {
             MapResult mapResult = (MapResult) FileImportExecutor.importFile(configuration, importFile, importFile.getName());
             List<Map> maps = mapResult.getResult();
             for (Map<String, Object> map : maps) {
-                int index = (int) map.get("index");
-                float f1 = (float) map.get("float");
+                Integer index = (Integer) map.get("index");
+                Float f1 = (Float) map.get("float");
                 String string = (String) map.get("string");
                 Date date = (Date) map.get("date");
                 BigDecimal bigDecimal = (BigDecimal) map.get("bigdecimal");
