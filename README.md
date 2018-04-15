@@ -1,14 +1,17 @@
 # 使用 demo
-* 引入 maven 
+
+* 引入maven
+   ```java
     <dependency>
-    <groupId>com.github.cyuanxin</groupId>
-    <artifactId>excel_export_import</artifactId>
-     <version>2.0-SNAPSHOT</version>
+        <groupId>com.github.cyuanxin</groupId>
+        <artifactId>excel_export_import</artifactId>
+        <version>2.0-SNAPSHOT</version>
     </dependency>
+    ```
     
-* 在资源目录文件夹下粘贴 我的项目resources的export和import文件夹，里面包含的是自己对excel导入导出的配置，将来使用的时候，按照你自己需要简单配置
+* 在资源目录文件夹下粘贴 当前项目下的resources的export和import文件夹，里面包含的是自己对excel导入导出的配置，将来使用的时候，按照你自己需要简单配置
    
-* 复制我的项目test/java/Test.java, 运行main方法即可
+* test/java/Test.java, 运行main方法即可
 
 # 特性
 
